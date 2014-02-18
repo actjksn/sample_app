@@ -13,7 +13,6 @@ class UsersController < ApplicationController
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
     else
-      flash[:error] = "There was problem creating this user!"
       render 'new'
     end
   end
