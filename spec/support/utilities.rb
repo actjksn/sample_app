@@ -5,6 +5,13 @@ def valid_signin(user)
   click_button "Sign in"
 end
 
+RSpec::Matchers.define :have_title_and_selector do |text|
+  match do |page|
+    expect(page).to have_selector('h1', text: text)
+    expect(page).to have_title(full_title(text))
+  end
+end
+
 RSpec::Matchers.define :have_error_message do |message|
   match do |page|
     expect(page).to have_selector('div.alert.alert-error', text: message)
