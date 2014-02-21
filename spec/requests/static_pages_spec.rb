@@ -31,7 +31,33 @@ describe "StaticPages" do
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      describe "should display the proper micropost counts" do
+
+        it "should be plural" do
+          expect(page).to have_selector('span', text: /^\d\smicroposts$/)
+        end
+
+        it "removing one should make it singular" do
+          expect { click_link('delete', match: :first) }.to change(Micropost, :count).by(-1)
+          expect(page).to have_selector("span", text: /^\d\smicropost$/)
+        end
+      end
     end
+  end
+
+  describe "pagination" do
+    let(:user) { FactoryGirl.create(:user) }
+    
+    before do
+      32.times { FactoryGirl.create(:micropost, user: user, content: "Repeat me...") }
+      sign_in user
+      visit root_path
+    end
+    after(:all) { user.microposts.delete_all }
+
+    it { should have_selector('div.pagination') }
+
   end
 
   describe "Help page" do
